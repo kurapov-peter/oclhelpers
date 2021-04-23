@@ -1,0 +1,7 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/oclhelpers.cmake")
+include(CMakeFindDependencyMacro)
+find_dependency(OpenCL)
+
+check_required_components(oclhelpers)

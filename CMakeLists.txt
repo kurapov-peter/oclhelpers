@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
-project(oclhelpers VERSION 0.1)
+set(helpers_version 0.1.0)
+project(oclhelpers VERSION ${helpers_version})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -40,9 +41,29 @@ export(EXPORT ${PROJECT_NAME}
        NAMESPACE oclhelpers::
 )
 
+include(CMakePackageConfigHelpers)
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
 
-#include(CMakePackageConfigHelpers)
-#configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-#  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
-#  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
-#)
+install(FILES
+          "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake"
+          "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY VERSION ${helpers_version})
+set_property(TARGET ${PROJECT_NAME} PROPERTY SOVERSION 0)
+set_property(TARGET ${PROJECT_NAME} PROPERTY
+  INTERFACE_${PROJECT_NAME}_MAJOR_VERSION 0)
+set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY
+  COMPATIBLE_INTERFACE_STRING ${PROJECT_NAME}_MAJOR_VERSION
+)
+
+# generate the helpers_version file for the config file
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake"
+  VERSION "${helpers_version}"
+  COMPATIBILITY AnyNewerVersion
+)
