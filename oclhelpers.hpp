@@ -2,6 +2,7 @@
 #include <CL/cl.hpp>
 #include <stdexcept>
 #include <string>
+#include <tuple>
 
 #define OCL_SAFE_CALL(call)                                                    \
   {                                                                            \
