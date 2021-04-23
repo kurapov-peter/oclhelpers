@@ -39,7 +39,7 @@ void build(cl::Program &program, cl::Device &device);
 /*
 The program is compiled with the default device on default platform.
 Usage example:
-    auto [platform, device, program] =
+    auto [platform, device, context, program] =
         compile_file_with_defaults("kernel.cl");
 */
 std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
