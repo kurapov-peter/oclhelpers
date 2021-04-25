@@ -18,6 +18,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenCL::OpenCL)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER oclhelpers.hpp)
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}
