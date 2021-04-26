@@ -5,25 +5,39 @@
 #include <tuple>
 
 namespace oclhelpers {
-cl::Platform get_default_platform() {
+std::vector<cl::Platform> get_platforms() {
   std::vector<cl::Platform> platforms;
   cl::Platform::get(&platforms);
   if (!platforms.size()) {
     throw OCLHelpersException("No platform found!");
   }
-  return platforms[0];
+  return platforms;
 }
 
-std::vector<cl::Device> get_gpus(const cl::Platform &p) {
+cl::Platform get_default_platform() { return get_platforms()[0]; }
+
+std::vector<cl::Device> get_devices(const cl::Platform &p, int type) {
   std::vector<cl::Device> devices;
-  p.getDevices(CL_DEVICE_TYPE_GPU, &devices);
+  p.getDevices(type, &devices);
   if (!devices.size()) {
-    throw OCLHelpersException("No gpus found!");
+    throw OCLHelpersException("No device of requested type found!");
   }
   return devices;
 }
 
+std::vector<cl::Device> get_gpus(const cl::Platform &p) {
+  return get_devices(p, CL_DEVICE_TYPE_GPU);
+}
+
+std::vector<cl::Device> get_cpus(const cl::Platform &p) {
+  return get_devices(p, CL_DEVICE_TYPE_CPU);
+}
+
 cl::Device get_default_device(const cl::Platform &p) { return get_gpus(p)[0]; }
+
+// fixme
+cl::Device get_default_gpu(const cl::Platform &p) { return get_gpus(p)[0]; }
+cl::Device get_default_cpu(const cl::Platform &p) { return get_cpus(p)[0]; }
 
 std::string read_kernel_from_file(const std::string &filename) {
   std::ifstream is(filename);
@@ -51,14 +65,42 @@ void build(cl::Program &program, cl::Device &device) {
 }
 
 std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
-compile_file_with_defaults(const std::string &filename) {
-  auto platform = get_default_platform();
-  auto device = get_default_device(platform);
-
+compile_file_with(const std::string &filename, cl::Platform &platform,
+                  cl::Device &device) {
   cl::Context ctx({device});
   auto program = make_program_from_file(ctx, filename);
   build(program, device);
   return std::make_tuple(platform, device, ctx, program);
+}
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_defaults(const std::string &filename) {
+  auto platform = get_default_platform();
+  auto device = get_default_device(platform);
+
+  return compile_file_with(filename, platform, device);
+}
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_cpu(const std::string &filename) {
+  auto platform = get_default_platform();
+  auto device = get_default_cpu(platform);
+
+  return compile_file_with(filename, platform, device);
+}
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_cpu(cl::Platform &platform,
+                              const std::string &filename) {
+  auto device = get_default_cpu(platform);
+  return compile_file_with(filename, platform, device);
+}
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_gpu(cl::Platform &platform,
+                              const std::string &filename) {
+  auto device = get_default_gpu(platform);
+  return compile_file_with(filename, platform, device);
 }
 
 std::string get_error_string(int error) {

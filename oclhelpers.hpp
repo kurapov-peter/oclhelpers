@@ -25,10 +25,14 @@ public:
   virtual ~OCLHelpersException() noexcept {}
 };
 
+std::vector<cl::Platform> get_platforms();
 cl::Platform get_default_platform();
 
 std::vector<cl::Device> get_gpus(const cl::Platform &p);
+std::vector<cl::Device> get_cpus(const cl::Platform &p);
 cl::Device get_default_device(const cl::Platform &p);
+cl::Device get_default_gpu(const cl::Platform &p);
+cl::Device get_default_cpu(const cl::Platform &p);
 
 std::string read_kernel_from_file(const std::string &filename);
 
@@ -45,6 +49,17 @@ Usage example:
 */
 std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
 compile_file_with_defaults(const std::string &filename);
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_cpu(const std::string &filename);
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_cpu(cl::Platform &platform,
+                              const std::string &filename);
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_gpu(cl::Platform &platform,
+                              const std::string &filename);
 
 namespace {
 inline void _set_args(cl::Kernel &k, int pos) {}
