@@ -39,7 +39,7 @@ std::string read_kernel_from_file(const std::string &filename);
 cl::Program make_program_from_file(cl::Context &ctx,
                                    const std::string &filename);
 
-void build(cl::Program &program, cl::Device &device);
+void build(cl::Program &program, const cl::Device &device);
 
 /*
 The program is compiled with the default device on default platform.
@@ -56,6 +56,9 @@ compile_file_with_default_cpu(const std::string &filename);
 std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
 compile_file_with_default_cpu(cl::Platform &platform,
                               const std::string &filename);
+
+std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
+compile_file_with_default_gpu(const std::string &filename);
 
 std::tuple<cl::Platform, cl::Device, cl::Context, cl::Program>
 compile_file_with_default_gpu(cl::Platform &platform,
