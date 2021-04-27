@@ -7,16 +7,16 @@ from pathlib import Path
 import os
 import subprocess
 
-package_version = "0.1.1"  # todo
-
 project_root_path = os.path.dirname(os.path.realpath(__file__))
 parser = argparse.ArgumentParser(description='Create release artifacts.')
 parser.add_argument(
     'destination', help='Destination folder for the package.', type=Path)
+parser.add_argument('version', help='Package version in x.x.x format.', type=str)
 
 args = parser.parse_args()
 
 package_path = Path(args.destination)
+package_version = args.version
 
 Path(package_path).mkdir(parents=True, exist_ok=True)
 
