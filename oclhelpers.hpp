@@ -1,5 +1,6 @@
 #pragma once
 #include <CL/cl.hpp>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 #include <tuple>
