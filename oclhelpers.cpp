@@ -14,6 +14,15 @@ std::vector<cl::Platform> get_platforms() {
   return platforms;
 }
 
+cl::Platform get_platform_matching(std::string_view s) {
+  auto platforms = get_platforms();
+  for (auto &p : platforms) {
+    auto pname = p.getInfo<CL_PLATFORM_NAME>();
+    if (pname.find(s) != std::string::npos)
+      return p;
+  }
+}
+
 cl::Platform get_default_platform() { return get_platforms()[0]; }
 
 std::vector<cl::Device> get_devices(const cl::Platform &p, int type) {

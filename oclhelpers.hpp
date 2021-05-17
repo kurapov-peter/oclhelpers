@@ -28,6 +28,7 @@ public:
 
 std::vector<cl::Platform> get_platforms();
 cl::Platform get_default_platform();
+cl::Platform get_platform_matching(std::string_view s);
 
 std::vector<cl::Device> get_gpus(const cl::Platform &p);
 std::vector<cl::Device> get_cpus(const cl::Platform &p);
