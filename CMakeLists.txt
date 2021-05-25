@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-set(helpers_version 0.1.1)
+set(helpers_version 0.1.3)
 project(oclhelpers VERSION ${helpers_version})
 
 set(CMAKE_CXX_STANDARD 17)
