@@ -9,6 +9,7 @@ find_package(OpenCL REQUIRED)
 find_package(Boost COMPONENTS program_options REQUIRED)
 
 include(GNUInstallDirs)
+include(FetchContent)
 
 add_library(${PROJECT_NAME} oclhelpers.cpp)
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -19,6 +20,19 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC OpenCL::OpenCL)
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER oclhelpers.hpp)
 set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+option(ENABLE_TESTS OFF)
+if(ENABLE_TESTS)
+    FetchContent_Declare(
+        googletest
+        GIT_REPOSITORY https://github.com/google/googletest.git
+        GIT_TAG release-1.11.0
+        )
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+
+    add_subdirectory(test)
+endif()
 
 install(TARGETS ${PROJECT_NAME}
     EXPORT ${PROJECT_NAME} DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -68,3 +82,4 @@ write_basic_package_version_file(
   VERSION "${helpers_version}"
   COMPATIBILITY AnyNewerVersion
 )
+
