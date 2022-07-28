@@ -1,0 +1,46 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  formatting-check:
+  
+    name: Formatting Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run clang-format style check for C/C++ programs.
+      uses: jidicula/clang-format-action@v4.5.0
+      with:
+        clang-format-version: '12'
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag oclhelpers
+      
+    - name: Start the container
+      run: |
+        docker run -id --name oclhelpers --network host -v $(pwd):/oclhelpers oclhelpers:latest
+      
+    - name: Configure the project
+      run: |
+        docker exec oclhelpers bash -c 'mkdir build'
+        docker exec oclhelpers cmake -B/build -S/oclhelpers -DENABLE_TESTS=on
+        
+    - name: Build the project
+      run: docker exec oclhelpers cmake --build /build --parallel 4
+      
+    - name: Test
+      run: docker exec oclhelpers bash -c /build/test/test
