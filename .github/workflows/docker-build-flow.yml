@@ -40,7 +40,7 @@ jobs:
         docker exec oclhelpers cmake -B/build -S/oclhelpers -DENABLE_TESTS=on
         
     - name: Build the project
-      run: docker exec -d oclhelpers cmake --build /build --parallel 4
+      run: docker exec oclhelpers cmake --build /build --parallel 4
       
     - name: Test
-      run: docker exec -d oclhelpers bash /build/test/test
+      run: docker exec oclhelpers bash -c /build/test/test
