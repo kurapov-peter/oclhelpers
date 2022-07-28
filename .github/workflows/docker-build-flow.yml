@@ -31,7 +31,9 @@ jobs:
       run: docker build . --file Dockerfile --tag oclhelpers
       
     - name: Start the container
-      run: docker run --name oclhelpers --network host -v $(pwd):/oclhelpers oclhelpers:latest
+      run: |
+        docker run --name oclhelpers --network host -v $(pwd):/oclhelpers oclhelpers:latest
+        docker start oclhelpers
       
     - name: Configure the project
       run: |
