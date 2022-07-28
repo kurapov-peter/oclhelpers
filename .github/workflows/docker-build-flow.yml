@@ -32,8 +32,7 @@ jobs:
       
     - name: Start the container
       run: |
-        docker run --name oclhelpers --network host -v $(pwd):/oclhelpers oclhelpers:latest
-        docker start oclhelpers
+        docker run -d --name oclhelpers --network host -v $(pwd):/oclhelpers oclhelpers:latest
       
     - name: Configure the project
       run: |
