@@ -37,8 +37,8 @@ jobs:
     - name: Configure the project
       run: |
         docker start oclhelpers
-        docker exec -d oclhelpers mkdir build
-        docker exec -d oclhelpers cmake -B/build -S/oclhelpers -DENABLE_TESTS=on
+        docker exec oclhelpers bash -c 'mkdir build'
+        docker exec oclhelpers cmake -B/build -S/oclhelpers -DENABLE_TESTS=on
         
     - name: Build the project
       run: docker exec -d oclhelpers cmake --build /build --parallel 4
